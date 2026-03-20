@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aplicativo de tarefas</title>
+</head>
+
+<body>
+    <h1>Aplicativo de tarefas</h1>
+    <hr />
+
+    <ul>
+        {% for tarefa in tarefas %}
+        <li>
+            <strong>{{ tarefa.titulo }}</strong>
+            {% if tarefa.concluida %}
+            <span style="color: green;">(concluída)</span>
+            {% else %}
+            <span style="color: orange;">(pendente)</span>
+            <a href="{% url 'concluir_tarefa' tarefa.id %}">[Marcar como Feita]</a>
+            <a href="{% url 'deletar_tarefa' tarefa.id %}" style="color: red">[x]</a>
+            {% endif %}
+        </li>
+        {% empty %}
+        <li>Nenhuma tarefa cadastrada.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Adicionar nova tarefa:</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="titulo">Título:</label>
+        <input id="titulo" type="text" name="novo_titulo" required>
+        <button type="submit">Salvar</button>
+    </form>
+
+</body>
+
+</html>
