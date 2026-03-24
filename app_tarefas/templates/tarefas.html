@@ -5,37 +5,156 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Aplicativo de tarefas</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            margin-top: 40px;
+            padding: 25px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background: #ddd;
+            margin: 15px 0;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background: #f7f7f7;
+            margin-bottom: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status {
+            margin-left: 10px;
+            font-size: 0.9em;
+        }
+
+        .concluida {
+            color: green;
+        }
+
+        .pendente {
+            color: orange;
+        }
+
+        .acoes a {
+            margin-left: 8px;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .btn-concluir {
+            color: #007bff;
+        }
+
+        .btn-deletar {
+            color: red;
+            font-weight: bold;
+        }
+
+        form {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        input {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            margin-top: 5px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            background: #4facfe;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #00c6ff;
+        }
+
+        .vazio {
+            text-align: center;
+            color: #777;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Aplicativo de tarefas</h1>
-    <hr />
+    <div class="container">
+        <h1>📝 Aplicativo de tarefas</h1>
+        <hr />
 
-    <ul>
-        {% for tarefa in tarefas %}
-        <li>
-            <strong>{{ tarefa.titulo }}</strong>
-            {% if tarefa.concluida %}
-            <span style="color: green;">(concluída)</span>
-            {% else %}
-            <span style="color: orange;">(pendente)</span>
-            <a href="{% url 'concluir_tarefa' tarefa.id %}">[Marcar como Feita]</a>
-            <a href="{% url 'deletar_tarefa' tarefa.id %}" style="color: red">[x]</a>
-            {% endif %}
-        </li>
-        {% empty %}
-        <li>Nenhuma tarefa cadastrada.</li>
-        {% endfor %}
-    </ul>
+        <ul>
+            {% for tarefa in tarefas %}
+            <li>
+                <div>
+                    <strong>{{ tarefa.titulo }}</strong>
 
-    <h2>Adicionar nova tarefa:</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <label for="titulo">Título:</label>
-        <input id="titulo" type="text" name="novo_titulo" required>
-        <button type="submit">Salvar</button>
-    </form>
+                    {% if tarefa.concluida %}
+                    <span class="status concluida">(concluída)</span>
+                    {% else %}
+                    <span class="status pendente">(pendente)</span>
+                    {% endif %}
+                </div>
 
+                {% if not tarefa.concluida %}
+                <div class="acoes">
+                    <a href="{% url 'concluir_tarefa' tarefa.id %}" class="btn-concluir">✔</a>
+                    <a href="{% url 'deletar_tarefa' tarefa.id %}" class="btn-deletar">✖</a>
+                </div>
+                {% endif %}
+            </li>
+            {% empty %}
+            <li class="vazio">Nenhuma tarefa cadastrada.</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Adicionar nova tarefa:</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label for="titulo">Título:</label>
+            <input id="titulo" type="text" name="novo_titulo" required>
+            <button type="submit">Salvar</button>
+        </form>
+    </div>
 </body>
 
 </html>
